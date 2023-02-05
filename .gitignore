@@ -1,0 +1,4 @@
+*.pkl
+*.index
+env/
+__pycache__/
