@@ -1,4 +1,4 @@
-"""This is the logic for ingesting Notion data into LangChain."""
+"""This is the logic for ingesting data into the vector store. """
 from pathlib import Path
 from langchain.text_splitter import CharacterTextSplitter
 import faiss
@@ -7,15 +7,9 @@ from langchain.embeddings import OpenAIEmbeddings
 import pickle
 
 
-# Here we load in the data in the format that Notion exports it in.
-#ps = list(Path("Notion_DB/").glob("**/*.md"))
 
-def conf_ingest(data, sources):
+def conf_ingest(data, sources, domain):
     print('conf ingest started')
-    # for p in ps:
-    #     with open(p) as f:
-    #         data.append(f.read())
-    #     sources.append(p)
 
     # Here we split the documents, as needed, into smaller chunks.
     # We do this due to the context limits of the LLMs.
@@ -29,7 +23,7 @@ def conf_ingest(data, sources):
 
     # Here we create a vector store from the documents and save it to disk.
     store = FAISS.from_texts(docs, OpenAIEmbeddings(), metadatas=metadatas)
-    faiss.write_index(store.index, "docs.index")
+    faiss.write_index(store.index, f"{domain}_confluence.index")
     store.index = None
-    with open("faiss_store.pkl", "wb") as f:
+    with open(f"{domain}_faiss_store.pkl", "wb") as f:
         pickle.dump(store, f)

@@ -5,12 +5,12 @@ from langchain.chains import VectorDBQAWithSourcesChain
 import pickle
 import argparse
 
-async def ask_question(question):
+async def ask_question(question, domain):
     # Load the LangChain.
     print('ask question started')
-    index = faiss.read_index("docs.index")
+    index = faiss.read_index(f"{domain}_confluence.index")
     print('faiss read')
-    with open("faiss_store.pkl", "rb") as f:
+    with open(f"{domain}_faiss_store.pkl", "rb") as f:
         store = pickle.load(f)
     print('pickle loaded')
     store.index = index
